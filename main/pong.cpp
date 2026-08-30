@@ -34,6 +34,7 @@ bool pongExit() {
 }
 
 void drawPongMenu() {
+    display.setTextSize(1);
     clearDisplay();
     for (int i = 0; i < 3; i++) {
         display.setCursor(0,i*15);
@@ -56,6 +57,11 @@ void pongUpdate() {
 
 // Stany gry
   if (pongState == pongMenu) {
+    static bool drawnOnce = false;
+    if (!drawnOnce) {
+      drawPongMenu();
+      drawnOnce = true;
+    }
     
     bool down = buttonPressed(0);
     bool up = buttonPressed(2);
@@ -77,23 +83,6 @@ void pongUpdate() {
     pongLastButtonUp = up;
     pongLastButtonSelect = select;
 
-    return;
-    
-    if (pressed_left_u || pressed_right_u) {
-      bx = 60; by = 50;
-      dx = 3; dy = 3;
-      px1 = 60;
-      pongState = pong_ONE_PLAYER;
-      delay(200);
-    }
-    if (pressed_left_d || pressed_right_d) {
-      bx = 60; by = 50;
-      dx = 2; dy = 2;
-      px1 = 60;
-      px2 = 60;
-      pongState = pong_TWO_PLAYER;
-      delay(200);
-    }
     return;
   }
   if (pongState == pong_GAMEOVER) {
