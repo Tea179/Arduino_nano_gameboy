@@ -8,11 +8,22 @@
 enum GameState {MENU, PONG, SNAKE, TETRIS, FLAPPY_BIRD};
 GameState state = MENU;
 
-int yPong = 0;
-int ySnake = 15;
-int yTetris = 30;
-int yFlappyBird = 45;
-int y = yPong;
+int selection = 0; // 0 = PONG; 1 = SNAKE; 2 = TETRIS; 3 = FlappyBird
+bool lastButtonDown = false;
+bool lastButtonUp = false;
+bool lastButtonSelect = false;
+const char* menuItems[] = {"PONG", "SNAKE", "TETRIS", "FLAPPY_BIRD"};
+
+void drawMenu() {
+    clearDisplay();
+    for (int i = 0; i < 4; i++) {
+        display.setCursor(0,i*15);
+        display.print(menuItems[i]);
+        if (i == selection) display.print("<--");
+        delay(10);
+    };
+    renderFrame();
+}
 
 void setup() {
     initDisplay();
@@ -24,6 +35,26 @@ void setup() {
 void loop() {
     switch (state) {
         case MENU:
+            bool down = buttonPressed(0);
+            bool up = buttonPressed(2);
+            bool select = buttonPressed(1) || buttonPressed(3);
+
+            if (down && !lastButtonDown) {
+                selection = (selection + 1) % 4;
+                drawMenu();
+            }
+            if (up && !lastButtonUp) {
+                selection = (selection -1) % 4;
+                drawMenu();
+            }
+            if (select && !lastButtonSelect) {
+                state = (GameState)(selection +1);
+            }
+
+            lastButtonDown = down;
+            lastButtonUp = up;
+            lastButtonSelect = select;
+
             break;
         case PONG:
             pongUpdate();
@@ -37,57 +68,5 @@ void loop() {
         case FLAPPY_BIRD:
             flappyBirdUpdate();
             break;
-    }
-    // Selecting
-    if (y = yPong) {
-        clearDisplay();
-        display.setCursor(10, yPong);
-        display.print("PONG <--");
-        display.setCursor(10, ySnake);
-        display.print("SNAKE");
-        display.setCursor(10, yTetris);
-        display.print("TETRIS");
-        display.setCursor(10, yFlappyBird);
-        display.print("FLAPPY_BIRD");
-        renderFrame();
-    }
-    else if (y == yPong && buttonPressed(5)) {
-        y = ySnake;
-        clearDisplay();
-        display.setCursor(10, yPong);
-        display.print("PONG");
-        display.setCursor(10, ySnake);
-        display.print("SNAKE <--");
-        display.setCursor(10, yTetris);
-        display.print("TETRIS");
-        display.setCursor(10, yFlappyBird);
-        display.print("FLAPPY_BIRD");
-        renderFrame();
-    }
-    else if (y == ySnake && buttonPressed(5)) {
-        y = yTetris;
-        clearDisplay();
-        display.setCursor(10, yPong);
-        display.print("PONG");
-        display.setCursor(10, ySnake);
-        display.print("SNAKE");
-        display.setCursor(10, yTetris);
-        display.print("TETRIS <--");
-        display.setCursor(10, yFlappyBird);
-        display.print("FLAPPY_BIRD");
-        renderFrame();
-    }
-    else if (y == yTetris && buttonPressed(5)) {
-        y = yFlappyBird;
-        clearDisplay();
-        display.setCursor(10, yPong);
-        display.print("PONG");
-        display.setCursor(10, ySnake);
-        display.print("SNAKE <--");
-        display.setCursor(10, yTetris);
-        display.print("TETRIS");
-        display.setCursor(10, yFlappyBird);
-        display.print("FLAPPY_BIRD <--");
-        renderFrame();
     }
 }
