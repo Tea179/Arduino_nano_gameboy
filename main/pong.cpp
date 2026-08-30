@@ -62,7 +62,6 @@ void pongUpdate() {
       drawPongMenu();
       pongMenuNeedsDraw = false;
     }
-    }
     
     bool down = buttonPressed(0);
     bool up = buttonPressed(2);
