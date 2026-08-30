@@ -25,10 +25,10 @@ void pongInit() {
 }
 
 void pongUpdate() {
-  bool pressed_left_u(digitalRead(buttonPressed(3)) == LOW);
-  bool pressed_right_u(digitalRead(buttonPressed(2)) == LOW);
-  bool pressed_left_d(digitalRead(buttonPressed(0)) == LOW);
-  bool pressed_right_d(digitalRead(buttonPressed(1)) == LOW);
+  bool pressed_left_u = buttonPressed(3);
+  bool pressed_right_u = buttonPressed(2);
+  bool pressed_left_d = buttonPressed(0);
+  bool pressed_right_d = buttonPressed(1);
 
 // Stany gry
   if (pongState == pongMenu) {
@@ -143,10 +143,10 @@ void pongUpdate() {
       lastPlatformUpdate = nowPlatform;
       // Dolna platforma
       if (pressed_left_d) {
-        px1 -= 2;
+        px1 += 2;
       }
       if (pressed_right_d) {
-        px1 += 2;
+        px1 -= 2;
       }
       if (px1 <= 0) {
         px1 = 0;
@@ -156,10 +156,10 @@ void pongUpdate() {
       }
       // Górna platforma
       if (pressed_left_u) {
-        px2 -= 2;
+        px2 += 2;
       }
       if (pressed_right_u) {
-        px2 += 2;
+        px2 -= 2;
       }
       if (px2 <= 0 ) {
         px2 = 0;
