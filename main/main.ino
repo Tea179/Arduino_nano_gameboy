@@ -44,7 +44,7 @@ void loop() {
                 drawMenu();
             }
             if (up && !lastButtonUp) {
-                selection = (selection -1) % 4;
+                selection = (selection +3) % 4;
                 drawMenu();
             }
             if (select && !lastButtonSelect) {
