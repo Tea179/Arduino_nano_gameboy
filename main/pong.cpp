@@ -17,14 +17,14 @@ unsigned long lastPlatformUpdate = 0;
 const unsigned long ballInterval = 40;
 const unsigned long platformInterval = 1;
 
-enum pongGameState {pongMenu, pong_ONE_PLAYER, pong_TWO_PLAYER, pong_GAMEOVER, MENU};
+enum pongGameState {pongMenu, pong_ONE_PLAYER, pong_TWO_PLAYER, MENU, pong_GAMEOVER};
 pongGameState pongState = pongMenu;
 
 int pongSelection = 0; // 0 = PONG; 1 = SNAKE; 2 = TETRIS; 3 = FlappyBird
 bool pongLastButtonDown = false;
 bool pongLastButtonUp = false;
 bool pongLastButtonSelect = false;
-const char* pongMenuItems[] = {"JEDNOOSOBOWY", "DWUOSOBOWY", "MENU"};
+const char* pongMenuItems[] = {"JEDNOOSOBOWY", "DWUOSOBOWY", "MAIN_MENU"};
 
 void drawPongMenu() {
     clearDisplay();
@@ -55,11 +55,11 @@ void pongUpdate() {
     bool select = buttonPressed(1) || buttonPressed(3);
 
     if (down && !pongLastButtonDown) {
-        pongSelection = (pongSelection + 1) % 4;
+        pongSelection = (pongSelection + 1) % 3;
         drawPongMenu();
     }
     if (up && !pongLastButtonUp) {
-        pongSelection = (pongSelection +3) % 4;
+        pongSelection = (pongSelection +3) % 3;
         drawPongMenu();
     }
     if (select && !pongLastButtonSelect) {
