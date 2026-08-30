@@ -3,5 +3,6 @@
 
 void pongInit();
 void pongUpdate();
+bool pongExit();
 
 #endif

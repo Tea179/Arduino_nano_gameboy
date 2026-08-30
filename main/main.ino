@@ -59,6 +59,10 @@ void loop() {
         }
         case PONG: {
             pongUpdate();
+            if (pongExit()) {
+                state = MENU;
+                drawMenu();
+            }
             break;
         }
         case SNAKE: {

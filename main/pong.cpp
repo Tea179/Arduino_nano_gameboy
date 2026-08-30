@@ -106,6 +106,11 @@ void pongUpdate() {
       delay(200);
     }
     return;
+    if (pongState == MENU) {
+      pongState = pongMenu;
+      exitToMainMenu = true;
+      return;
+    }
   }
 
 // Tryb jednoosobowy
