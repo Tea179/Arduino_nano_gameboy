@@ -77,6 +77,11 @@ void pongUpdate() {
     }
     if (select && !pongLastButtonSelect) {
         pongState = (pongGameState)(pongSelection +1);
+        if (pongState == pong_ONE_PLAYER || pongState == pong_TWO_PLAYER) {
+          bx = 60; by = 50;
+          dx = 2; dy = 2;
+          px1 = 60, px2 = 60;
+        }
     }
 
     pongLastButtonDown = down;
