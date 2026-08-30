@@ -26,6 +26,13 @@ bool pongLastButtonUp = false;
 bool pongLastButtonSelect = false;
 const char* pongMenuItems[] = {"JEDNOOSOBOWY", "DWUOSOBOWY", "MAIN_MENU"};
 
+bool exitToMainMenu = false;
+bool pongExit() {
+  bool result = exitToMainMenu;
+  exitToMainMenu = false;
+  return result;
+}
+
 void drawPongMenu() {
     clearDisplay();
     for (int i = 0; i < 3; i++) {
@@ -106,11 +113,11 @@ void pongUpdate() {
       delay(200);
     }
     return;
-    if (pongState == MENU) {
-      pongState = pongMenu;
-      exitToMainMenu = true;
-      return;
-    }
+  }
+  if (pongState == MENU) {
+    pongState = pongMenu;
+    exitToMainMenu = true;
+    return;
   }
 
 // Tryb jednoosobowy
