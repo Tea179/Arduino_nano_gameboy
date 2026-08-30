@@ -143,10 +143,10 @@ void pongUpdate() {
       lastPlatformUpdate = nowPlatform;
       // Dolna platforma
       if (pressed_left_d) {
-        px1 += 2;
+        px1 -= 2;
       }
       if (pressed_right_d) {
-        px1 -= 2;
+        px1 += 2;
       }
       if (px1 <= 0) {
         px1 = 0;
@@ -156,10 +156,10 @@ void pongUpdate() {
       }
       // Górna platforma
       if (pressed_left_u) {
-        px2 += 2;
+        px2 -= 2;
       }
       if (pressed_right_u) {
-        px2 -= 2;
+        px2 += 2;
       }
       if (px2 <= 0 ) {
         px2 = 0;

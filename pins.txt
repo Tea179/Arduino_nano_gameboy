@@ -2,3 +2,9 @@ D8 = 3
 D7 = 2
 D6 = 1
 D5 = 0
+
+// Tact switches location
+
+ /\
+<  >
+ \/
