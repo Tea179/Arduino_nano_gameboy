@@ -34,7 +34,7 @@ void setup() {
 
 void loop() {
     switch (state) {
-        case MENU:
+        case MENU: {
             bool down = buttonPressed(0);
             bool up = buttonPressed(2);
             bool select = buttonPressed(1) || buttonPressed(3);
@@ -56,17 +56,22 @@ void loop() {
             lastButtonSelect = select;
 
             break;
-        case PONG:
+        }
+        case PONG: {
             pongUpdate();
             break;
-        case SNAKE:
+        }
+        case SNAKE: {
             snakeUpdate();
             break;
-        case TETRIS:
+        }
+        case TETRIS: {
             tetrisUpdate();
             break;
-        case FLAPPY_BIRD:
+        }
+        case FLAPPY_BIRD: {
             flappyBirdUpdate();
             break;
+        }
     }
 }
