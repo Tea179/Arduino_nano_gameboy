@@ -25,10 +25,10 @@ void pongInit() {
 }
 
 void pongUpdate() {
-  bool pressed_left_u(digitalRead(BUTTON_LEFT_U) == LOW);
-  bool pressed_right_u(digitalRead(BUTTON_RIGHT_U) == LOW);
-  bool pressed_left_d(digitalRead(BUTTON_LEFT_D) == LOW);
-  bool pressed_right_d(digitalRead(BUTTON_RIGHT_D) == LOW);
+  bool pressed_left_u(digitalRead(buttonPressed(3)) == LOW);
+  bool pressed_right_u(digitalRead(buttonPressed(2)) == LOW);
+  bool pressed_left_d(digitalRead(buttonPressed(0)) == LOW);
+  bool pressed_right_d(digitalRead(buttonPressed(1)) == LOW);
 
 // Stany gry
   if (pongState == pongMenu) {
@@ -191,7 +191,7 @@ void pongUpdate() {
         } else if (by <= SCREEN_HEIGHT + ballH) {
           bx = 60; by = 50;
           dx = 2; dy = 2;
-          state = GAMEOVER;
+          pongState = pong_GAMEOVER;
         }
       } else if (by >= 60 - ballH) {
         if (bx + ballW >= px1 && bx <= px1 + 20) {
