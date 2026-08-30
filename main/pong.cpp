@@ -100,12 +100,14 @@ void pongUpdate() {
     if (pressed_left_u || pressed_right_u || pressed_left_d || pressed_right_d) {
       pongState = pongMenu;
       delay(200);
+      pongMenuNeedsDraw = true;
     }
     return;
   }
   if (pongState == MENU) {
     pongState = pongMenu;
     exitToMainMenu = true;
+    pongMenuNeedsDraw = true;
     return;
   }
 
