@@ -11,6 +11,8 @@ GameState state = MENU;
 void setup() {
     initDisplay();
     initInput();
+    display.setTextSize(2);
+    display.setTextColor(SSD1306_WHITE);
 }
 
 void loop() {
@@ -30,6 +32,11 @@ void loop() {
             flappyBirdUpdate();
             break;
     }
-    updateGame();
+    // Selecting
+    clearDisplay();
+    display.print("PONG");
+    display.print("SNAKE");
+    display.print("TETRIS");
+    display.print("FLAPPY_BIRD");
     renderFrame();
 }
