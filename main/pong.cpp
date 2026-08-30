@@ -32,6 +32,7 @@ bool pongExit() {
   exitToMainMenu = false;
   return result;
 }
+bool pongMenuNeedsDraw = true;
 
 void drawPongMenu() {
     display.setTextSize(1);
@@ -57,10 +58,10 @@ void pongUpdate() {
 
 // Stany gry
   if (pongState == pongMenu) {
-    static bool drawnOnce = false;
-    if (!drawnOnce) {
+    if (pongMenuNeedsDraw) {
       drawPongMenu();
-      drawnOnce = true;
+      pongMenuNeedsDraw = false;
+    }
     }
     
     bool down = buttonPressed(0);
@@ -72,7 +73,7 @@ void pongUpdate() {
         drawPongMenu();
     }
     if (up && !pongLastButtonUp) {
-        pongSelection = (pongSelection +3) % 3;
+        pongSelection = (pongSelection +2) % 3;
         drawPongMenu();
     }
     if (select && !pongLastButtonSelect) {
