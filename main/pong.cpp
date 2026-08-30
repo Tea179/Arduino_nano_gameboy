@@ -17,8 +17,25 @@ unsigned long lastPlatformUpdate = 0;
 const unsigned long ballInterval = 40;
 const unsigned long platformInterval = 1;
 
-enum gameState {pongMenu, pong_ONE_PLAYER, pong_TWO_PLAYER, pong_GAMEOVER};
-gameState pongState = pongMenu;
+enum pongGameState {pongMenu, pong_ONE_PLAYER, pong_TWO_PLAYER, pong_GAMEOVER, MENU};
+pongGameState pongState = pongMenu;
+
+int pongSelection = 0; // 0 = PONG; 1 = SNAKE; 2 = TETRIS; 3 = FlappyBird
+bool pongLastButtonDown = false;
+bool pongLastButtonUp = false;
+bool pongLastButtonSelect = false;
+const char* pongMenuItems[] = {"JEDNOOSOBOWY", "DWUOSOBOWY", "MENU"};
+
+void drawPongMenu() {
+    clearDisplay();
+    for (int i = 0; i < 3; i++) {
+        display.setCursor(0,i*15);
+        display.print(pongMenuItems[i]);
+        if (i == pongSelection) display.print("<--");
+        delay(10);
+    };
+    renderFrame();
+}
 
 void pongInit() {
   display.setTextColor(SSD1306_WHITE);
@@ -32,14 +49,28 @@ void pongUpdate() {
 
 // Stany gry
   if (pongState == pongMenu) {
-    display.clearDisplay();
-    display.setTextSize(1);
-    display.setCursor(10,20);
-    display.print("1. JEDNOOSOBOWY");
-    display.setCursor(10,40);
-    display.print("2. DWUOSOBOWY");
+    
+    bool down = buttonPressed(0);
+    bool up = buttonPressed(2);
+    bool select = buttonPressed(1) || buttonPressed(3);
 
-    display.display();
+    if (down && !pongLastButtonDown) {
+        pongSelection = (pongSelection + 1) % 4;
+        drawPongMenu();
+    }
+    if (up && !pongLastButtonUp) {
+        pongSelection = (pongSelection +3) % 4;
+        drawPongMenu();
+    }
+    if (select && !pongLastButtonSelect) {
+        pongState = (pongGameState)(pongSelection +1);
+    }
+
+    pongLastButtonDown = down;
+    pongLastButtonUp = up;
+    pongLastButtonSelect = select;
+
+    return;
     
     if (pressed_left_u || pressed_right_u) {
       bx = 60; by = 50;
