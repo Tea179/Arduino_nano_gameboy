@@ -4,6 +4,7 @@
 #include "snake.h"
 #include "tetris.h"
 #include "flappy_bird.h"
+#include "buzzer.h"
 
 enum GameState {MENU, PONG, SNAKE, TETRIS, FLAPPY_BIRD};
 GameState state = MENU;
@@ -28,6 +29,7 @@ void drawMenu() {
 void setup() {
     initDisplay();
     initInput();
+    initBuzzer();
     display.setTextSize(1);
     display.setTextColor(SSD1306_WHITE);
 }
@@ -41,14 +43,17 @@ void loop() {
 
             if (down && !lastButtonDown) {
                 selection = (selection + 1) % 4;
+                buzzMenuMove();
                 drawMenu();
             }
             if (up && !lastButtonUp) {
                 selection = (selection +3) % 4;
+                buzzMenuMove();
                 drawMenu();
             }
             if (select && !lastButtonSelect) {
                 state = (GameState)(selection +1);
+                buzzSelect();
             }
 
             lastButtonDown = down;

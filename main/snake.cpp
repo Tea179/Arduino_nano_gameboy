@@ -1,6 +1,7 @@
 #include "snake.h"
 #include "display.h"
 #include "input.h"
+#include "buzzer.h"
 #include <Arduino.h>
 
 enum snakeGameState {snakeMenu, MENU, snakeGame, snakeGameover};
@@ -61,13 +62,6 @@ void snakeUpdate() {
         snakeSelection = (snakeSelection +3) % 2;
         drawSnakeMenu();
     }
-    // Return to main menu
-    if (snakeState == MENU) {
-      snakeState = snakeMenu;
-      snakeExitToMainMenu = true;
-      snakeMenuNeedsDraw = true;
-      return;
-    }
     if (select && !snakeLastButtonSelect) {
       snakeState = (snakeGameState)(snakeSelection +1);
       return;
@@ -77,6 +71,13 @@ void snakeUpdate() {
     snakeLastButtonUp = up;
     snakeLastButtonSelect = select;
 
+    return;
+  }
+  // Return to main menu
+  if (snakeState == MENU) {
+    snakeState = snakeMenu;
+    snakeExitToMainMenu = true;
+    snakeMenuNeedsDraw = true;
     return;
   }
 }

@@ -1,6 +1,7 @@
 #include "pong.h"
 #include "input.h"
 #include "display.h"
+#include "buzzer.h"
 #include <Arduino.h>
 
 int px1 = 60;
@@ -69,14 +70,17 @@ void pongUpdate() {
 
     if (down && !pongLastButtonDown) {
         pongSelection = (pongSelection + 1) % 3;
+        buzzMenuMove();
         drawPongMenu();
     }
     if (up && !pongLastButtonUp) {
         pongSelection = (pongSelection +2) % 3;
+        buzzMenuMove();
         drawPongMenu();
     }
     if (select && !pongLastButtonSelect) {
         pongState = (pongGameState)(pongSelection +1);
+        buzzSelect();
         if (pongState == pong_ONE_PLAYER || pongState == pong_TWO_PLAYER) {
           bx = 60; by = 50;
           dx = 2; dy = 2;
@@ -159,9 +163,11 @@ void pongUpdate() {
         if (bx + ballW >= px1 && bx <= px1 + 20) {
           by = 60 - ballH;
           dy = -dy;
+          buzzTouch();
         } else if (by >= SCREEN_HEIGHT - ballH) {
           bx = 60; by = 50;
           dx = 2; dy = 2;
+          buzzGameOver();
           pongState = pong_GAMEOVER;
         }
       }
@@ -227,18 +233,22 @@ void pongUpdate() {
         if (bx + ballW >= px2 && bx <= px2 +20) {
           by = 0;
           dy = -dy;
+          buzzTouch();
         } else if (by <= SCREEN_HEIGHT + ballH) {
           bx = 60; by = 50;
           dx = 2; dy = 2;
+          buzzGameOver();
           pongState = pong_GAMEOVER;
         }
       } else if (by >= 60 - ballH) {
         if (bx + ballW >= px1 && bx <= px1 + 20) {
           by = 60 - ballH;
           dy = -dy;
+          buzzTouch();
         } else if (by >= SCREEN_HEIGHT - ballH) {
           bx = 60; by = 50;
           dx = 2; dy = 2;
+          buzzGameOver();
           pongState = pong_GAMEOVER;
         }
       }
