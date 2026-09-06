@@ -40,6 +40,7 @@ void loop() {
             bool down = buttonPressed(0);
             bool up = buttonPressed(2);
             bool select = buttonPressed(1) || buttonPressed(3);
+            delay(50);
 
             if (down && !lastButtonDown) {
                 selection = (selection + 1) % 4;

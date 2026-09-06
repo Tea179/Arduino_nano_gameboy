@@ -4,7 +4,7 @@
 #include "buzzer.h"
 #include <Arduino.h>
 
-enum snakeGameState {snakeMenu, MENU, snakeGame, snakeGameover};
+enum snakeGameState {snakeMenu, snakeGame, MENU, snakeGameover};
 snakeGameState snakeState = snakeMenu;
 
 int snakeSelection = 1; // 0 = PONG; 1 = SNAKE; 2 = TETRIS; 3 = FlappyBird
