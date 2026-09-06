@@ -61,18 +61,22 @@ void snakeUpdate() {
         snakeSelection = (snakeSelection +3) % 2;
         drawSnakeMenu();
     }
+    // Return to main menu
+    if (snakeState == MENU) {
+      snakeState = snakeMenu;
+      snakeExitToMainMenu = true;
+      snakeMenuNeedsDraw = true;
+      return;
+    }
+    if (select && !snakeLastButtonSelect) {
+      snakeState = (snakeGameState)(snakeSelection +1);
+      return;
+    }
 
     snakeLastButtonDown = down;
     snakeLastButtonUp = up;
     snakeLastButtonSelect = select;
 
-    return;
-  }
-  // Return to main menu
-  if (snakeState == MENU) {
-    snakeState = snakeMenu;
-    snakeExitToMainMenu = true;
-    snakeMenuNeedsDraw = true;
     return;
   }
 }
