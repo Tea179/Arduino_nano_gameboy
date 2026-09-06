@@ -24,12 +24,12 @@ int pongSelection = 0; // 0 = PONG; 1 = SNAKE; 2 = TETRIS; 3 = FlappyBird
 bool pongLastButtonDown = false;
 bool pongLastButtonUp = false;
 bool pongLastButtonSelect = false;
-const char* pongMenuItems[] = {"JEDNOOSOBOWY", "DWUOSOBOWY", "MAIN_MENU"};
+const char* pongMenuItems[] = {"JEDNOOSOBOWY", "DWUOSOBOWY", "MENU"};
 
-bool exitToMainMenu = false;
+bool pongExitToMainMenu = false;
 bool pongExit() {
-  bool result = exitToMainMenu;
-  exitToMainMenu = false;
+  bool result = pongExitToMainMenu;
+  pongExitToMainMenu = false;
   return result;
 }
 bool pongMenuNeedsDraw = true;
@@ -111,7 +111,7 @@ void pongUpdate() {
   }
   if (pongState == MENU) {
     pongState = pongMenu;
-    exitToMainMenu = true;
+    pongExitToMainMenu = true;
     pongMenuNeedsDraw = true;
     return;
   }

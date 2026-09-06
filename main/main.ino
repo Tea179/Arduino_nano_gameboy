@@ -67,6 +67,10 @@ void loop() {
         }
         case SNAKE: {
             snakeUpdate();
+            if (snakeExit()) {
+                state = MENU;
+                drawMenu();
+            }
             break;
         }
         case TETRIS: {

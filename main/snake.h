@@ -3,5 +3,6 @@
 
 void snakeInit();
 void snakeUpdate();
+bool snakeExit();
 
 #endif
