@@ -25,7 +25,7 @@ bool snakeMenuNeedsDraw = true;
 void drawSnakeMenu() {
     display.setTextSize(1);
     clearDisplay();
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < (int)(sizeof(snakeMenuItems)/sizeof(snakeMenuItems[0])); i++) {
         display.setCursor(0,i*15);
         display.print(snakeMenuItems[i]);
         if (i == snakeSelection) display.print("<--");
@@ -56,14 +56,17 @@ void snakeUpdate() {
 
     if (down && !snakeLastButtonDown) {
         snakeSelection = (snakeSelection + 1) % 2;
+        buzzMenuMove();
         drawSnakeMenu();
     }
     if (up && !snakeLastButtonUp) {
         snakeSelection = (snakeSelection +3) % 2;
+        buzzMenuMove();
         drawSnakeMenu();
     }
     if (select && !snakeLastButtonSelect) {
       snakeState = (snakeGameState)(snakeSelection +1);
+      buzzSelect();
       return;
     }
 

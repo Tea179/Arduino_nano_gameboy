@@ -38,7 +38,7 @@ bool pongMenuNeedsDraw = true;
 void drawPongMenu() {
     display.setTextSize(1);
     clearDisplay();
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < (int)(sizeof(pongMenuItems)/sizeof(pongMenuItems[0])); i++) {
         display.setCursor(0,i*15);
         display.print(pongMenuItems[i]);
         if (i == pongSelection) display.print("<--");
