@@ -1,3 +1,5 @@
+// LEFT PIN - 3, RIGHT PIN - 1, TOP PIN - 2, BOTTOM PIN - 0
+
 #include "input.h"
 #include <Arduino.h>
 

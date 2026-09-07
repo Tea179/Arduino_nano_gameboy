@@ -13,6 +13,9 @@ bool snakeLastButtonUp = false;
 bool snakeLastButtonSelect = false;
 const char* snakeMenuItems[] = {"Graj", "MENU"};
 
+int snakeHeadX = 60;
+int snakeHeadY = 30;
+
 bool snakeExitToMainMenu = false;
 bool snakeExit() {
   bool result = snakeExitToMainMenu;
@@ -81,6 +84,68 @@ void snakeUpdate() {
     snakeState = snakeMenu;
     snakeExitToMainMenu = true;
     snakeMenuNeedsDraw = true;
+    return;
+  }
+
+  // GAME
+  if (snakeState == snakeGame) {
+    // wall colision
+    if (snakeHeadX <= 0 || snakeHeadX >= 128) {
+      snakeHeadX = 60;
+      snakeHeadY = 30;
+      buzzGameOver();
+      snakeState = snakeGameover;
+    } else if (snakeHeadY <= 0 || snakeHeadY >= 64) {
+      snakeHeadX = 60;
+      snakeHeadY = 30;
+      buzzGameOver();
+      snakeState = snakeGameover;
+    }
+    // moving
+    while (snakeHeadX) {
+      case (buttonPressed(1)) {
+        snakeHeadX += 1;
+        delay(50);
+      }
+      case (buttonPressed(3)) {
+        snakeHeadX -+ 1;
+        delay(50);
+      }
+    }
+    while (snakeHeadY) {
+      case (buttonPressed(0)) {
+        snakeHeadY += 1;
+        delay(50);
+      }
+      case (buttonPressed(2)) {
+        snakeHeadY -= 1;
+        delay(50);
+      }
+    }
+  display.clearDisplay();
+  display.setCursor(snakeHeadX, snakeHeadY);
+  display.print("■");
+  display.display();
+  }
+
+  // GAMEOVER
+  if (snakeState == snakeGameover) {
+    display.clearDisplay();
+    display.setTextSize(2);
+    display.setCursor(5,15);
+    display.print("Koniec Gry");
+    display.setTextSize(1);
+    display.setCursor(2,35);
+    display.print("Nacisnij dowolny");
+    display.setCursor(2,45);
+    display.print("Przycisk");
+    display.display();
+
+    if (pressed_left_u || pressed_right_u || pressed_left_d || pressed_right_d) {
+      snakeState = snakeMenu;
+      delay(200);
+      snakeMenuNeedsDraw = true;
+    }
     return;
   }
 }

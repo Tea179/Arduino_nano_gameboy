@@ -1,10 +1,12 @@
 #include "display.h"
 #include "input.h"
+#include "buzzer.h"
+#include "battery.h"
 #include "pong.h"
 #include "snake.h"
 #include "tetris.h"
 #include "flappy_bird.h"
-#include "buzzer.h"
+
 
 enum GameState {MENU, PONG, SNAKE, TETRIS, FLAPPY_BIRD};
 GameState state = MENU;
@@ -30,11 +32,14 @@ void setup() {
     initDisplay();
     initInput();
     initBuzzer();
+    initBattery();
     display.setTextSize(1);
     display.setTextColor(SSD1306_WHITE);
 }
 
 void loop() {
+    updateBatteryLED();
+    
     switch (state) {
         case MENU: {
             bool down = buttonPressed(0);
