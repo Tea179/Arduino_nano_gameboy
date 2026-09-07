@@ -4,6 +4,11 @@
 #include "buzzer.h"
 #include <Arduino.h>
 
+// GAME VARIABLES
+int snakeHeadX = 60;
+int snakeHeadY = 30;
+
+// MENU VARIABLES
 enum snakeGameState {snakeMenu, snakeGame, MENU, snakeGameover};
 snakeGameState snakeState = snakeMenu;
 
@@ -12,9 +17,6 @@ bool snakeLastButtonDown = false;
 bool snakeLastButtonUp = false;
 bool snakeLastButtonSelect = false;
 const char* snakeMenuItems[] = {"Graj", "MENU"};
-
-int snakeHeadX = 60;
-int snakeHeadY = 30;
 
 bool snakeExitToMainMenu = false;
 bool snakeExit() {
@@ -102,29 +104,25 @@ void snakeUpdate() {
       snakeState = snakeGameover;
     }
     // moving
-    while (snakeHeadX) {
-      case (buttonPressed(1)) {
-        snakeHeadX += 1;
-        delay(50);
-      }
-      case (buttonPressed(3)) {
-        snakeHeadX -+ 1;
-        delay(50);
-      }
+    unsigned long snakeMoveDelay = millis();
+
+    if (snakeHeadX && buttonPressed(3)) {
+      snakeHeadX -= 1;
+      snakeMoveDelay;
+    } else if (snakeHeadX && buttonPressed(1)) {
+      snakeHeadX += 1;
+      snakeMoveDelay;
+    } else if (snakeHeadY && buttonPressed(2)) {
+      snakeHeadY -= 1;
+      snakeMoveDelay;
+    } else if (snakeHeadY && buttonPressed(0)) {
+      snakeHeadY += 1;
+      snakeMoveDelay;
     }
-    while (snakeHeadY) {
-      case (buttonPressed(0)) {
-        snakeHeadY += 1;
-        delay(50);
-      }
-      case (buttonPressed(2)) {
-        snakeHeadY -= 1;
-        delay(50);
-      }
-    }
+
   display.clearDisplay();
   display.setCursor(snakeHeadX, snakeHeadY);
-  display.print("■");
+  display.print("o");
   display.display();
   }
 
