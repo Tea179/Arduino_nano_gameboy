@@ -7,8 +7,8 @@
 // GAME VARIABLES
   // grid
 const int CELL = 4;
-const int GRID_W = 128;
-const int GRID_H = 64;
+const int GRID_W = 128 / CELL;
+const int GRID_H = 64 / CELL;
   // snake
 int snakeHeadX = 60;
 int snakeHeadY = 30;
@@ -18,6 +18,8 @@ int snakeBodyY[MAX_LENGHT];
 int snakeLength = 3;
 int newX;
 int newY;
+int snakeDirX = 1;
+int snakeDirY = 0;
   // delay
 unsigned long snakeLastMove = 0;
 const unsigned long SNAKE_MOVE_INTERVAL = 200;
@@ -125,6 +127,9 @@ void snakeUpdate() {
   // GAME
   if (snakeState == snakeGame) {
     //colision
+    newX = snakeBodyX[0] + snakeDirX;
+    newY = snakeBodyY[0] + snakeDirY; 
+
     if (snakeHeadX <= 0 || snakeHeadX >= 128) {
       snakeHeadX = 60;
       snakeHeadY = 30;
@@ -157,10 +162,7 @@ void snakeUpdate() {
       snakeDirY = 1;
     }
 
-    newX = snakeBodyX[0] + snakeDirX;
-    newY = snakeBodyY[0] + snakeDirY;
-
-    for (int i = snakeLenght-1; i > 0; i--) {
+    for (int i = snakeLength-1; i > 0; i--) {
       snakeBodyX[i] = snakeBodyX[i-1];
       snakeBodyY[i] = snakeBodyY[i-1];
     }
@@ -170,7 +172,7 @@ void snakeUpdate() {
     
 
   display.clearDisplay();
-  for (int i = 0; i < snakeLenght; i++) {
+  for (int i = 0; i < snakeLength; i++) {
     display.fillRect(snakeBodyX[i]*CELL, snakeBodyY[i]*CELL, CELL, CELL, SSD1306_WHITE);
   }
   display.fillRect(foodX*CELL, foodY*CELL, CELL, CELL, SSD1306_WHITE);
