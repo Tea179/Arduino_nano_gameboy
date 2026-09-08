@@ -10,9 +10,9 @@ const int CELL = 4;
 const int GRID_W = 128 / CELL;
 const int GRID_H = 64 / CELL;
   // snake
-const int MAX_LENGHT = 64;
-int snakeBodyX[MAX_LENGHT];
-int snakeBodyY[MAX_LENGHT];
+const int MAX_LENGTH = 64;
+int snakeBodyX[MAX_LENGTH];
+int snakeBodyY[MAX_LENGTH];
 int snakeLength;
 int newX;
 int newY;
@@ -20,7 +20,7 @@ int snakeDirX;
 int snakeDirY;
   // delay
 unsigned long snakeLastMove = 0;
-const unsigned long SNAKE_MOVE_INTERVAL = 200;
+const unsigned long SNAKE_MOVE_INTERVAL = 500;
   // food
 int foodX, foodY;
 
@@ -139,24 +139,21 @@ void snakeUpdate() {
 
     //colision
 
-    if (snakeHeadX <= 0 || snakeHeadX >= 128) {
-      snakeHeadX = 60;
-      snakeHeadY = 30;
-      buzzGameOver();
-      snakeState = snakeGameover;
-    } else if (snakeHeadY <= 0 || snakeHeadY >= 64) {
-      snakeHeadX = 60;
-      snakeHeadY = 30;
-      buzzGameOver();
-      snakeState = snakeGameover;
+    bool hitWall = (newX < 0 || newX >= GRID_W || newY < 0 || newY >=GRID_H);
+
+    bool hitSelf = false;
+    for (int i = 0; i < snakeLength; i++){
+      if (snakeBodyX[i] == newX && snakeBodyY[i] == newY) {
+        hitSelf = true;
+        break;
+      }
     }
-    for (int i = 0; i < snakeLength; i++)
-    if (snakeBodyX[i] == newX && snakeBodyY[i] == newY) {
-      snakeHeadX = 60;
-      snakeHeadY = 30;
-      buzzGameOver();
-      snakeState = snakeGameover;
-    }
+    
+   if (hitWall || hitSelf) {
+     buzzGameOver();
+     snakeState = snakeGameover;
+     return;
+   }
     // moving
 
     if (buttonPressed(2) && snakeDirY !=1) {
@@ -166,6 +163,14 @@ void snakeUpdate() {
     if (buttonPressed(0) && snakeDirY != -1) {
       snakeDirX = 0;
       snakeDirY = 1;
+    }
+    if (buttonPressed(1) && snakeDirX != 1) {
+      snakeDirX = -1;
+      snakeDirY = 0;
+    }
+    if (buttonPressed(3) && snakeDirX != -1) {
+      snakeDirX = 1;
+      snakeDirY = 0;
     }
 
     newX = snakeBodyX[0] + snakeDirX;
@@ -181,6 +186,12 @@ void snakeUpdate() {
     
   // food
     bool ateFood = (newX == foodX && newY == foodY);
+
+    if (ateFood && snakeLength < MAX_LENGTH) {
+      snakeLength++;
+      spawnFood();
+      buzzTouch();
+    }
 
   display.clearDisplay();
   for (int i = 0; i < snakeLength; i++) {
