@@ -15,7 +15,7 @@ int selection = 0; // 0 = PONG; 1 = SNAKE; 2 = TETRIS; 3 = FlappyBird
 bool lastButtonDown = false;
 bool lastButtonUp = false;
 bool lastButtonSelect = false;
-const char* menuItems[] = {"PONG", "SNAKE", "TETRIS", "FLAPPY_BIRD"};
+const char* menuItems[] = {"PONG", "SNAKE", "TETRIS", "FLAPPY BIRD"};
 
 void drawMenu() {
     clearDisplay();
@@ -39,7 +39,7 @@ void setup() {
 
 void loop() {
     updateBatteryLED();
-    
+
     switch (state) {
         case MENU: {
             bool down = buttonPressed(0);

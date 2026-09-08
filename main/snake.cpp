@@ -5,8 +5,39 @@
 #include <Arduino.h>
 
 // GAME VARIABLES
+  // grid
+const int CELL = 4;
+const int GRID_W = 128;
+const int GRID_H = 64;
+  // snake
 int snakeHeadX = 60;
 int snakeHeadY = 30;
+const int MAX_LENGHT = 64;
+int snakeBodyX[MAX_LENGHT];
+int snakeBodyY[MAX_LENGHT];
+int snakeLength = 3;
+int newX;
+int newY;
+  // delay
+unsigned long snakeLastMove = 0;
+const unsigned long SNAKE_MOVE_INTERVAL = 200;
+  // food
+int foodX, foodY;
+
+void spawnFood() {
+  bool collision;
+  do {
+    collision = false;
+    foodX = random(0, GRID_W);
+    foodY = random(0, GRID_H);
+    for (int i = 0; i < snakeLength; i++) {
+      if (snakeBodyX[i] == foodX && snakeBodyY[i] == foodY) {
+        collision = true;
+        break;
+      }
+    } 
+  } while (collision);
+}
 
 // MENU VARIABLES
 enum snakeGameState {snakeMenu, snakeGame, MENU, snakeGameover};
@@ -47,6 +78,8 @@ void snakeUpdate() {
   bool pressed_right_u = buttonPressed(2);
   bool pressed_left_d = buttonPressed(0);
   bool pressed_right_d = buttonPressed(1);
+
+  randomSeed(analogRead(A1));
 
   // Stany gry
   if (snakeState == snakeMenu) {
@@ -91,7 +124,7 @@ void snakeUpdate() {
 
   // GAME
   if (snakeState == snakeGame) {
-    // wall colision
+    //colision
     if (snakeHeadX <= 0 || snakeHeadX >= 128) {
       snakeHeadX = 60;
       snakeHeadY = 30;
@@ -103,26 +136,44 @@ void snakeUpdate() {
       buzzGameOver();
       snakeState = snakeGameover;
     }
+    for (int i = 0; i < snakeLength; i++)
+    if (snakeBodyX[i] == newX && snakeBodyY[i] == newY) {
+      snakeHeadX = 60;
+      snakeHeadY = 30;
+      buzzGameOver();
+      snakeState = snakeGameover;
+    }
     // moving
-    unsigned long snakeMoveDelay = millis();
-
-    if (snakeHeadX && buttonPressed(3)) {
-      snakeHeadX -= 1;
-      snakeMoveDelay;
-    } else if (snakeHeadX && buttonPressed(1)) {
-      snakeHeadX += 1;
-      snakeMoveDelay;
-    } else if (snakeHeadY && buttonPressed(2)) {
-      snakeHeadY -= 1;
-      snakeMoveDelay;
-    } else if (snakeHeadY && buttonPressed(0)) {
-      snakeHeadY += 1;
-      snakeMoveDelay;
+    if (millis() - snakeLastMove >= SNAKE_MOVE_INTERVAL) {
+      snakeLastMove = millis();
     }
 
+    if (buttonPressed(2) && snakeDirY !=1) {
+      snakeDirX = 0;
+      snakeDirY = -1;
+    }
+    if (buttonPressed(0) && snakeDirY != -1) {
+      snakeDirX = 0;
+      snakeDirY = 1;
+    }
+
+    newX = snakeBodyX[0] + snakeDirX;
+    newY = snakeBodyY[0] + snakeDirY;
+
+    for (int i = snakeLenght-1; i > 0; i--) {
+      snakeBodyX[i] = snakeBodyX[i-1];
+      snakeBodyY[i] = snakeBodyY[i-1];
+    }
+
+    snakeBodyX[0] = newX;
+    snakeBodyY[0] = newY;
+    
+
   display.clearDisplay();
-  display.setCursor(snakeHeadX, snakeHeadY);
-  display.print("o");
+  for (int i = 0; i < snakeLenght; i++) {
+    display.fillRect(snakeBodyX[i]*CELL, snakeBodyY[i]*CELL, CELL, CELL, SSD1306_WHITE);
+  }
+  display.fillRect(foodX*CELL, foodY*CELL, CELL, CELL, SSD1306_WHITE);
   display.display();
   }
 
