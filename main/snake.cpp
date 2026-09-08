@@ -15,11 +15,11 @@ int snakeHeadY = 30;
 const int MAX_LENGHT = 64;
 int snakeBodyX[MAX_LENGHT];
 int snakeBodyY[MAX_LENGHT];
-int snakeLength = 3;
+int snakeLength;
 int newX;
 int newY;
-int snakeDirX = 1;
-int snakeDirY = 0;
+int snakeDirX;
+int snakeDirY;
   // delay
 unsigned long snakeLastMove = 0;
 const unsigned long SNAKE_MOVE_INTERVAL = 200;
@@ -74,6 +74,14 @@ void drawSnakeMenu() {
 
 void snakeInit() {
   display.setTextColor(SSD1306_WHITE);
+  snakeLength = 3;
+  for (int i = 0; i < snakeLength; i++) {
+    snakeBodyX[i] = GRID_W/2 - 1;
+    snakeBodyY[i] = GRID_H/2;
+  }
+  snakeDirX = 1;
+  snakeDirY = 0;
+  spawnFood();
 }
 void snakeUpdate() {
   bool pressed_left_u = buttonPressed(3);
@@ -126,9 +134,12 @@ void snakeUpdate() {
 
   // GAME
   if (snakeState == snakeGame) {
+    if (millis() - snakeLastMove >= SNAKE_MOVE_INTERVAL) {
+      snakeLastMove = millis();
+    }
+
+
     //colision
-    newX = snakeBodyX[0] + snakeDirX;
-    newY = snakeBodyY[0] + snakeDirY; 
 
     if (snakeHeadX <= 0 || snakeHeadX >= 128) {
       snakeHeadX = 60;
@@ -149,9 +160,6 @@ void snakeUpdate() {
       snakeState = snakeGameover;
     }
     // moving
-    if (millis() - snakeLastMove >= SNAKE_MOVE_INTERVAL) {
-      snakeLastMove = millis();
-    }
 
     if (buttonPressed(2) && snakeDirY !=1) {
       snakeDirX = 0;
@@ -162,6 +170,9 @@ void snakeUpdate() {
       snakeDirY = 1;
     }
 
+    newX = snakeBodyX[0] + snakeDirX;
+    newY = snakeBodyY[0] + snakeDirY; 
+
     for (int i = snakeLength-1; i > 0; i--) {
       snakeBodyX[i] = snakeBodyX[i-1];
       snakeBodyY[i] = snakeBodyY[i-1];
@@ -170,6 +181,8 @@ void snakeUpdate() {
     snakeBodyX[0] = newX;
     snakeBodyY[0] = newY;
     
+  // food
+    bool ateFood = (newX == foodX && newY == foodY);
 
   display.clearDisplay();
   for (int i = 0; i < snakeLength; i++) {
