@@ -10,8 +10,6 @@ const int CELL = 4;
 const int GRID_W = 128 / CELL;
 const int GRID_H = 64 / CELL;
   // snake
-int snakeHeadX = 60;
-int snakeHeadY = 30;
 const int MAX_LENGHT = 64;
 int snakeBodyX[MAX_LENGHT];
 int snakeBodyY[MAX_LENGHT];
