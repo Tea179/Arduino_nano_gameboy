@@ -20,7 +20,7 @@ int snakeDirX;
 int snakeDirY;
   // delay
 unsigned long snakeLastMove = 0;
-const unsigned long SNAKE_MOVE_INTERVAL = 500;
+const unsigned long SNAKE_MOVE_INTERVAL = 1000;
   // food
 int foodX, foodY;
 
@@ -74,7 +74,7 @@ void snakeInit() {
   display.setTextColor(SSD1306_WHITE);
   snakeLength = 3;
   for (int i = 0; i < snakeLength; i++) {
-    snakeBodyX[i] = GRID_W/2 - 1;
+    snakeBodyX[i] = GRID_W/2 - i;
     snakeBodyY[i] = GRID_H/2;
   }
   snakeDirX = 1;
@@ -112,6 +112,9 @@ void snakeUpdate() {
     }
     if (select && !snakeLastButtonSelect) {
       snakeState = (snakeGameState)(snakeSelection +1);
+      if (snakeState == snakeGame) {
+        snakeInit();
+      }
       buzzSelect();
       return;
     }
@@ -136,24 +139,6 @@ void snakeUpdate() {
       snakeLastMove = millis();
     }
 
-
-    //colision
-
-    bool hitWall = (newX < 0 || newX >= GRID_W || newY < 0 || newY >=GRID_H);
-
-    bool hitSelf = false;
-    for (int i = 0; i < snakeLength; i++){
-      if (snakeBodyX[i] == newX && snakeBodyY[i] == newY) {
-        hitSelf = true;
-        break;
-      }
-    }
-    
-   if (hitWall || hitSelf) {
-     buzzGameOver();
-     snakeState = snakeGameover;
-     return;
-   }
     // moving
 
     if (buttonPressed(2) && snakeDirY !=1) {
@@ -175,6 +160,24 @@ void snakeUpdate() {
 
     newX = snakeBodyX[0] + snakeDirX;
     newY = snakeBodyY[0] + snakeDirY; 
+
+    //colision
+
+    bool hitWall = (newX < 0 || newX >= GRID_W || newY < 0 || newY >=GRID_H);
+
+    bool hitSelf = false;
+    for (int i = 0; i < snakeLength; i++){
+      if (snakeBodyX[i] == newX && snakeBodyY[i] == newY) {
+        hitSelf = true;
+        break;
+      }
+    }
+    
+   if (hitWall || hitSelf) {
+     buzzGameOver();
+     snakeState = snakeGameover;
+     return;
+   }
 
     for (int i = snakeLength-1; i > 0; i--) {
       snakeBodyX[i] = snakeBodyX[i-1];
