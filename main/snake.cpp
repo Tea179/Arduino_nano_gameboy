@@ -4,11 +4,45 @@
 #include "buzzer.h"
 #include <Arduino.h>
 
+// MENU VARIABLES
+enum snakeGameState {snakeMenu, snakeGame, MENU, snakeGameover};
+snakeGameState snakeState = snakeMenu;
+
+int snakeSelection = 1;
+bool snakeLastButtonDown = false;
+bool snakeLastButtonUp = false;
+bool snakeLastButtonSelect = false;
+const char* snakeMenuItems[] = {"Graj", "MENU"};
+
+bool snakeExitToMainMenu = false;
+bool snakeExit() {
+  bool result = snakeExitToMainMenu;
+  snakeExitToMainMenu = false;
+  return result;
+}
+
+bool snakeMenuNeedsDraw = true;
+
+void drawSnakeMenu() {
+    display.setTextSize(1);
+    clearDisplay();
+    for (int i = 0; i < (int)(sizeof(snakeMenuItems)/sizeof(snakeMenuItems[0])); i++) {
+        display.setCursor(0,i*15);
+        display.print(snakeMenuItems[i]);
+        if (i == snakeSelection) display.print("<--");
+        delay(10);
+    };
+    renderFrame();
+}
+
 // GAME VARIABLES
   // grid
 const int CELL = 4;
-const int GRID_W = 128 / CELL;
-const int GRID_H = 64 / CELL;
+const int BOARD_SIZE = 60;
+const int GRID_W = BOARD_SIZE / CELL;
+const int GRID_H = BOARD_SIZE / CELL;
+const int OFFSET_X = (128 - BOARD_SIZE) / 2;
+const int OFFSET_Y = (64 - BOARD_SIZE) / 2;
   // snake
 const int MAX_LENGTH = 64;
 int snakeBodyX[MAX_LENGTH];
@@ -39,35 +73,32 @@ void spawnFood() {
   } while (collision);
 }
 
-// MENU VARIABLES
-enum snakeGameState {snakeMenu, snakeGame, MENU, snakeGameover};
-snakeGameState snakeState = snakeMenu;
+//scoreboard
+int score = 0;
+int highscore = score;
 
-int snakeSelection = 1; // 0 = PONG; 1 = SNAKE; 2 = TETRIS; 3 = FlappyBird
-bool snakeLastButtonDown = false;
-bool snakeLastButtonUp = false;
-bool snakeLastButtonSelect = false;
-const char* snakeMenuItems[] = {"Graj", "MENU"};
-
-bool snakeExitToMainMenu = false;
-bool snakeExit() {
-  bool result = snakeExitToMainMenu;
-  snakeExitToMainMenu = false;
-  return result;
-}
-
-bool snakeMenuNeedsDraw = true;
-
-void drawSnakeMenu() {
+void snake_scoreboard() {
+  if (highscore <= score) {
+      highscore = score;
+      score = 0;
+    } else {
+      highscore = score;
+      score = 0;
+  }
     display.setTextSize(1);
-    clearDisplay();
-    for (int i = 0; i < (int)(sizeof(snakeMenuItems)/sizeof(snakeMenuItems[0])); i++) {
-        display.setCursor(0,i*15);
-        display.print(snakeMenuItems[i]);
-        if (i == snakeSelection) display.print("<--");
-        delay(10);
-    };
-    renderFrame();
+    display.setCursor(2,25);
+    display.print("Wynik");
+    display.setCursor(2,35);
+    display.print(score);
+  }
+  if (snakeState == snakeGameover) {
+    display.setTextSize(2);
+    display.setCursor(5,5);
+    display.print("Wynik: " + score);
+    display.setTextSize(1);
+    display.setCursor(5,20);
+    display.print("Najlepszy wynik: " + highscore);
+  }
 }
 
 void snakeInit() {
@@ -190,26 +221,31 @@ void snakeUpdate() {
     bool ateFood = (newX == foodX && newY == foodY);
 
     if (ateFood && snakeLength < MAX_LENGTH) {
-      snakeLength++;
-      spawnFood();
-      buzzTouch();
+        snakeLength++;
+        score += 1;
+        snake_scoreboard();
+        spawnFood();
+        buzzTouch();
+      }
     }
-    }
+
+  // display  
   display.clearDisplay();
+
+  display.drawRect(OFFSET_X - 1, OFFSET_Y - 1, BOARD_SIZE + 2, BOARD_SIZE + 2, SSD1306_WHITE);
+
   for (int i = 0; i < snakeLength; i++) {
-    display.fillRect(snakeBodyX[i]*CELL, snakeBodyY[i]*CELL, CELL, CELL, SSD1306_WHITE);
+    display.fillRect(OFFSET_X + snakeBodyX[i]*CELL, OFFSET_Y + snakeBodyY[i]*CELL, CELL, CELL, SSD1306_WHITE);
   }
-  display.fillRect(foodX*CELL, foodY*CELL, CELL, CELL, SSD1306_WHITE);
+  display.fillRect(OFFSET_X + foodX*CELL, OFFSET_Y + foodY*CELL, CELL, CELL, SSD1306_WHITE);
+  snake_scoreboard();
   display.display();
   }
 
   // GAMEOVER
   if (snakeState == snakeGameover) {
     display.clearDisplay();
-    display.setTextSize(2);
-    display.setCursor(5,15);
-    display.print("Koniec Gry");
-    display.setTextSize(1);
+    snake_scoreboard();
     display.setCursor(2,35);
     display.print("Nacisnij dowolny");
     display.setCursor(2,45);
