@@ -74,31 +74,26 @@ void spawnFood() {
 }
 
 //scoreboard
-int score = 0;
-int highscore = score;
+int snake_score;
+int snake_highscore = 0;
 
-void snake_scoreboard() {
-  if (highscore <= score) {
-      highscore = score;
-      score = 0;
-    } else {
-      highscore = score;
-      score = 0;
-  }
-    display.setTextSize(1);
-    display.setCursor(2,25);
-    display.print("Wynik");
-    display.setCursor(2,35);
-    display.print(score);
-  }
-  if (snakeState == snakeGameover) {
-    display.setTextSize(2);
-    display.setCursor(5,5);
-    display.print("Wynik: " + score);
-    display.setTextSize(1);
-    display.setCursor(5,20);
-    display.print("Najlepszy wynik: " + highscore);
-  }
+void snakeDrawScoreHUD() {
+  display.setTextSize(1);
+  display.setCursor(2,25);
+  display.print("Wynik");
+  display.setCursor(2,35);
+  display.print(snake_score);
+}
+
+void snakeDrawGameOverScore() {
+  display.setTextSize(2);
+  display.setCursor(5,5);
+  display.print("Wynik: ");
+  display.print(snake_score);
+  display.setTextSize(1);
+  display.setCursor(5,20);
+  display.print("Najlepszy wynik: ");
+  display.print(snake_highscore);
 }
 
 void snakeInit() {
@@ -111,6 +106,8 @@ void snakeInit() {
   snakeDirX = 1;
   snakeDirY = 0;
   spawnFood();
+
+  snake_score = 0;
 }
 void snakeUpdate() {
   bool pressed_left_u = buttonPressed(3);
@@ -205,6 +202,7 @@ void snakeUpdate() {
     
    if (hitWall || hitSelf) {
      buzzGameOver();
+     if (snake_score > snake_highscore) snake_highscore = snake_score;
      snakeState = snakeGameover;
      return;
    }
@@ -222,10 +220,10 @@ void snakeUpdate() {
 
     if (ateFood && snakeLength < MAX_LENGTH) {
         snakeLength++;
-        score += 1;
-        snake_scoreboard();
+        snake_score += 1;
         spawnFood();
         buzzTouch();
+        renderFrame();
       }
     }
 
@@ -238,7 +236,7 @@ void snakeUpdate() {
     display.fillRect(OFFSET_X + snakeBodyX[i]*CELL, OFFSET_Y + snakeBodyY[i]*CELL, CELL, CELL, SSD1306_WHITE);
   }
   display.fillRect(OFFSET_X + foodX*CELL, OFFSET_Y + foodY*CELL, CELL, CELL, SSD1306_WHITE);
-  snake_scoreboard();
+  snakeDrawScoreHUD();
   display.display();
   }
 
