@@ -3,5 +3,6 @@
 
 void tetrisInit();
 void tetrisUpdate();
+bool tetrisExit();
 
 #endif

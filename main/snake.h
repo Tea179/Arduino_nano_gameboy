@@ -4,6 +4,4 @@
 void snakeInit();
 void snakeUpdate();
 bool snakeExit();
-void snake_scoreboard();
-
 #endif

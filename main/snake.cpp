@@ -243,7 +243,7 @@ void snakeUpdate() {
   // GAMEOVER
   if (snakeState == snakeGameover) {
     display.clearDisplay();
-    snake_scoreboard();
+    snakeDrawGameOverScore();
     display.setCursor(2,35);
     display.print("Nacisnij dowolny");
     display.setCursor(2,45);

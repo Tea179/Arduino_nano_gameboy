@@ -86,11 +86,19 @@ void loop() {
         }
         case TETRIS: {
             tetrisUpdate();
+            if (tetrisExit()) {
+                state = MENU;
+                drawMenu();
+            }
             break;
         }
         case FLAPPY_BIRD: {
             flappyBirdUpdate();
+            if (flappyBirdExit()) {
+                state = MENU;
+                drawMenu();
+            }
             break;
-        }
+        }  
     }
 }

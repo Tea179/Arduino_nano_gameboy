@@ -3,5 +3,6 @@
 
 void flappyBirdInit();
 void flappyBirdUpdate();
+bool flappyBirdExit();
 
 #endif
